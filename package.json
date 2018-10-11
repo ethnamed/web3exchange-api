@@ -1,0 +1,16 @@
+{
+  "name": "web3exchange-api",
+  "version": "0.0.1",
+  "description": "API for web3 exchange",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile" : "lsc -c *.ls"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bitcore-message": "^1.0.4",
+    "superagent": "^4.0.0-beta.5"
+  }
+}
