@@ -13,18 +13,24 @@ create-signature = (private-key, request, cb)->
     return cb err if err?
     cb null, signature
 
-convert-builder = (config) -> ({ from, to, value, address }, cb)->
+generic-call = (fields, name)-> (config)-> (request, cb)->
     { api-url, private-key } = config
-    clientid = guid!
-    request = { to, from, value, address, clientid }
+    for item in fields
+        return cb "`#{item}` is required" if not request[item]?
     err, signature <- create-signature private-key, request
     return cb err if err?
-    err, data <- post "#{api-url}/exchange", request .set \signature, signature .end
+    err, data <- post "#{api-url}/#{name}", request .set \signature, signature .end
     return cb err if err?
     err, result <- json-parse data.text
     return cb err if err?
     cb null, result
 
+kyc-builder     = generic-call <[ firstname lastname bill photo clientid ]> , \kyc
+
+convert-builder = generic-call <[ to from value address clientid ]> , \exchange
+
+
+export create-clientid = guid
 
 export get-address = (key)->
     private-key = bitcore.PrivateKey.fromWIF key
@@ -33,4 +39,5 @@ export get-address = (key)->
 export create-api = (api-url, private-key)->
     config = { api-url, private-key }
     convert = convert-builder config
-    { convert }
+    kyc = kyc-builder config
+    { convert, kyc }

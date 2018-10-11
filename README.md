@@ -1,6 +1,6 @@
 ## Web3 Exchange API
 
-### Install 
+### Install
 
 ```
 npm i web3exchange-api
@@ -50,6 +50,7 @@ api.convert({ from, to, value, address }, cb)
 ```Javascript
 
 var request = {
+    clientid: api.createClientid(),
     from: "ETH",
     to: "USD",
     value: "1", //ETH
@@ -72,6 +73,7 @@ api.convert(request, cb);
 ```Javascript
 
 var request = {
+    clientid: api.createClientid(),
     from: "USD",
     to: "ETH",
     value: "100", //USD
@@ -85,3 +87,30 @@ var cb = (err, data) {
 api.convert(request, cb);
 
 ```
+
+
+You can get an error `KYC is required` so please follow next steps
+
+```Javascript
+
+var request = {
+    clientid: request.clientid,
+    email: "you@email.com",
+    clientid: ""
+    firstname: "John",
+    lastname: "Melburn"
+    address: "8913 3rd Street Brooklyn, NY 11223",
+    photo: "data:" // Encoded base64, please make sure that photo in correct format
+    bill: "data:" // Encoded base64, please make sure that bill in correct format
+}
+
+var cb = (err, data) {
+    console.log(data.checkout_url);
+}
+
+api.kyc(request, cb);
+
+```
+
+[Here](https://www.base64-image.de/) is information how to encode the image.
+
