@@ -6,7 +6,7 @@
   jsonParse = require('./json-parse.js');
   bitcore = require('bitcore-lib');
   Message = require('bitcore-message');
-  createSignature = function(request, cb){
+  createSignature = function(privateKey, request, cb){
     return jsonParse(request, function(err, str){
       var signature;
       if (err != null) {
@@ -21,9 +21,9 @@
   };
   convertBuilder = function(config){
     return function(arg$, cb){
-      var from, to, value, address, apiUrl, clientid, request;
+      var from, to, value, address, apiUrl, privateKey, clientid, request;
       from = arg$.from, to = arg$.to, value = arg$.value, address = arg$.address;
-      apiUrl = config.apiUrl;
+      apiUrl = config.apiUrl, privateKey = config.privateKey;
       clientid = guid();
       request = {
         to: to,
@@ -32,7 +32,7 @@
         address: address,
         clientid: clientid
       };
-      return createSignature(request, function(err, signature){
+      return createSignature(privateKey, request, function(err, signature){
         if (err != null) {
           return cb(err);
         }
@@ -55,10 +55,11 @@
     privateKey = bitcore.PrivateKey.fromWIF(key);
     return privateKey.toAddress(bitcore.Networks.livenet).toString();
   };
-  out$.createApi = createApi = function(apiUrl){
+  out$.createApi = createApi = function(apiUrl, privateKey){
     var config, convert;
     config = {
-      apiUrl: apiUrl
+      apiUrl: apiUrl,
+      privateKey: privateKey
     };
     convert = convertBuilder(config);
     return {

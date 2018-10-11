@@ -6,7 +6,7 @@ require! {
   \bitcore-message : Message
 }
 
-create-signature = (request, cb)->
+create-signature = (private-key, request, cb)->
     err, str <- json-parse request
     return cb err if err?
     signature = Message(str).sign private-key
@@ -14,10 +14,10 @@ create-signature = (request, cb)->
     cb null, signature
 
 convert-builder = (config) -> ({ from, to, value, address }, cb)->
-    { api-url } = config
+    { api-url, private-key } = config
     clientid = guid!
     request = { to, from, value, address, clientid }
-    err, signature <- create-signature request
+    err, signature <- create-signature private-key, request
     return cb err if err?
     err, data <- post "#{api-url}/exchange", request .set \signature, signature .end
     return cb err if err?
@@ -30,7 +30,7 @@ export get-address = (key)->
     private-key = bitcore.PrivateKey.fromWIF key
     return private-key.to-address bitcore.Networks.livenet .to-string!
 
-export create-api = (api-url)->
-    config = { api-url }
+export create-api = (api-url, private-key)->
+    config = { api-url, private-key }
     convert = convert-builder config
     { convert }
