@@ -104,7 +104,7 @@ var request = {
 }
 
 var cb = (err, data) {
-    console.log(data.checkout_url);
+    console.log( err === null);
 }
 
 api.kyc(request, cb);

@@ -1,6 +1,6 @@
 {
   "name": "web3exchange-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "API for web3 exchange",
   "main": "app.js",
   "scripts": {
