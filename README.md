@@ -35,13 +35,12 @@ var builder = require('web3exchange-api');
 var privateKey = "cPBn5A4ikZvBTQ8D7NnvHZYCAxzDZ5Z2TSGW2LkyPiLxqYaJPBW4";
 var apiUrl = "http://ethnamed.io:8081";
 
-api = builder.createApi(apiUrl, privateKey);
+builder.createApi({ apiUrl, privateKey }, (err, api)=> {
 
+    api.convert({ from, to, value, address }, cb);
+    
+});
 
-
-api.convert({ from, to, value, address }, cb)
-
-//...
 
 ```
 

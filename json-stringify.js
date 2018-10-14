@@ -3,11 +3,11 @@
   var toString$ = {}.toString;
   module.exports = function(str, cb){
     var err;
-    if (toString$.call(str).slice(8, -1) !== 'String') {
-      return cb("FATAL. Failed JSON. Expected string");
+    if (toString$.call(str).slice(8, -1) !== 'Object') {
+      return cb("FATAL. Failed JSON. Expected object");
     }
     try {
-      return cb(null, JSON.parse(str));
+      return cb(null, JSON.stringify(str));
     } catch (e$) {
       err = e$;
       return cb(err);

@@ -1,13 +1,15 @@
 require! {
   \superagent : { post }
   \./guid.js
+  \./json-stringify.js
   \./json-parse.js
   \bitcore-lib : bitcore
   \bitcore-message : Message
 }
 
-create-signature = (private-key, request, cb)->
-    err, str <- json-parse request
+create-signature = (private-key-hex, request, cb)->
+    private-key = bitcore.PrivateKey.fromWIF private-key-hex
+    err, str <- json-stringify request
     return cb err if err?
     signature = Message(str).sign private-key
     return cb err if err?
@@ -36,8 +38,10 @@ export get-address = (key)->
     private-key = bitcore.PrivateKey.fromWIF key
     return private-key.to-address bitcore.Networks.livenet .to-string!
 
-export create-api = (api-url, private-key)->
+export create-api = ({ api-url, private-key }, cb)->
+    return cb "apiUrl is required" if not api-url?
+    return cb "private-key is required" if not private-key?
     config = { api-url, private-key }
     convert = convert-builder config
     kyc = kyc-builder config
-    { convert, kyc }
+    cb null, { convert, kyc }
